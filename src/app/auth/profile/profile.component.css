@@ -1,0 +1,24 @@
+mat-form-field {
+    width: 100%;
+}
+
+mat-card-subtitle {
+    margin-bottom: 1vw;
+    font-size: 0.6em;
+}
+
+div {
+    width: 100%;
+}
+
+button {
+    color: white;
+}
+
+.name-container {
+    padding: 0px;
+}
+
+.container {
+    padding: 0;
+}

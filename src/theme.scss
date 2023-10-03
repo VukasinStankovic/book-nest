@@ -1,0 +1,30 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+// TODO: dodaj nijanse
+$my-primary: mat.define-palette(mat.$teal-palette, 800);
+$my-accent: mat.define-palette(mat.$amber-palette, 700);
+$my-warn: mat.define-palette(mat.$red-palette, 400);
+
+$my-light: mat.define-light-theme(
+  (
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+      warn: $my-warn,
+    ),
+  )
+);
+
+$my-dark: mat.define-dark-theme(
+  (
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+      test: $my-warn,
+    ),
+  )
+);
+
+@include mat.all-component-themes($my-light);

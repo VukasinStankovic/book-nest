@@ -1,0 +1,70 @@
+<div class="container" fxLayout="column" fxLayoutGap="3vh">
+  <div
+    *ngFor="let genre of topThreeGenres"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+  >
+    <h1>Top 10: {{ genre }}</h1>
+    <carousel
+      [itemsPerSlide]="itemsPerSlide"
+      [singleSlideOffset]="singleSlideOffset"
+      [interval]="carouselIntervals"
+      [noWrap]="noWrap"
+    >
+      <slide *ngFor="let book of getTop10BooksByGenre(genre)">
+        <mat-card fxLayout="column" fxLayoutAlign="space-between center">
+          <mat-card-content
+            fxLayout="column"
+            fxLayoutAlign="center"
+            fxLayoutGap="10px"
+          >
+            <div class="image-container">
+              <img [src]="book.image" alt="Loading..." />
+              <button mat-flat-button color="primary" class="hover-button">
+                Detaljnije
+              </button>
+            </div>
+            <mat-card-title> {{ book.title }}</mat-card-title>
+            <mat-card-subtitle
+              ><b>Autor:</b> {{ book.author }}
+            </mat-card-subtitle>
+            <span>
+              {{ book.genre.join(", ") }}
+            </span>
+          </mat-card-content>
+          <div fxLayout="column" fxLayoutGap="5px">
+            <button mat-button color="primary" class="price">
+              {{ book.price }} din
+            </button>
+            <button mat-raised-button [ngClass]="getButtonColorClass(book)">
+              <b> {{ book.inventoryStatus }} </b>
+            </button>
+
+            <mat-card-actions fxLayoutAlign="space-evenly">
+              <button
+                [disabled]="
+                  book.inventoryStatus == 'Nije na stanju' ||
+                  this._userService.getLogedUser() == undefined
+                "
+                mat-icon-button
+                matTooltip="Dodaj u korpu"
+                fxLayoutAlign="center center"
+              >
+                <mat-icon>add_shopping_cart</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                matTooltip="Oceni knjigu"
+                fxLayoutAlign="center center"
+              >
+                <!-- TODO: promena ikonice kada se klikne na dodaj u listu zelja -->
+                <mat-icon>favorite_border</mat-icon>
+              </button>
+            </mat-card-actions>
+          </div>
+        </mat-card>
+      </slide>
+    </carousel>
+  </div>
+</div>

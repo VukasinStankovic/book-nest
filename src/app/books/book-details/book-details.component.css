@@ -1,0 +1,58 @@
+img {
+  border: 1px solid black;
+  width: 100%;
+}
+
+.book-details {
+  border-right: 1px solid rgba(0, 0, 0, 0.276);
+  padding-right: 20px;
+}
+
+rating {
+  font-size: xx-large;
+  color: #FFA000;
+  margin-bottom: 10px;
+}
+
+.p-margin-0 {
+  margin: 0px !important;
+}
+
+.book-price {
+  padding: 10px;
+  display: inline-block;
+  background-color: #075f3f80;
+  border-radius: 10px;
+}
+
+.quantity {
+  align-self: center;
+  margin-right: 10px;
+}
+
+.rating {
+  font-size: large;
+  font-weight: bold;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Mat-form-field */
+
+mat-form-field {
+  width: 130px;
+}
+
+mat-expansion-panel,
+mat-card {
+  transition: none !important;
+  box-shadow: none !important;
+}
+
+.comment-holder {
+  border-left: 1px solid black;
+}

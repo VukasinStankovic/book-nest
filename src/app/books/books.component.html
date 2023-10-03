@@ -1,0 +1,238 @@
+<div class="container">
+  <div class="row">
+    <div class="col-3">
+      <div class="filter-container" fxLayout="column" fxLayoutGap="30px">
+        <mat-accordion [multi]="true">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h4>Žanrovi</h4>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-selection-list [(ngModel)]="selectedGenres" color="primary">
+              <mat-list-option *ngFor="let genre of genres" [value]="genre">
+                {{ genre }}
+              </mat-list-option>
+            </mat-selection-list>
+          </mat-expansion-panel>
+          <!-- Izdavaci -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h4>Izdavači</h4>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-selection-list
+              [(ngModel)]="selectedPublishers"
+              color="primary"
+            >
+              <mat-list-option
+                *ngFor="let publisher of publishers"
+                [value]="publisher"
+              >
+                {{ publisher }}
+              </mat-list-option>
+            </mat-selection-list>
+          </mat-expansion-panel>
+          <!-- Povez -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h4>Povez</h4>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-selection-list
+              [(ngModel)]="selectedBookBinding"
+              color="primary"
+            >
+              <mat-list-option
+                *ngFor="let binding of bookBinding"
+                [value]="binding"
+              >
+                {{ binding }}
+              </mat-list-option>
+            </mat-selection-list>
+          </mat-expansion-panel>
+          <!-- Jezik -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h4>Jezik</h4>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-selection-list [(ngModel)]="selectedLanguages" color="primary">
+              <mat-list-option
+                *ngFor="let language of languages"
+                [value]="language"
+              >
+                {{ language }}
+              </mat-list-option>
+            </mat-selection-list>
+          </mat-expansion-panel>
+          <!-- Status -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h4>Status</h4>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-selection-list
+              [(ngModel)]="selectedStatus"
+              color="primary"
+              [multiple]="false"
+            >
+              <mat-list-option
+                *ngFor="let status of bookInventoryStatus"
+                [value]="status"
+              >
+                {{ status }}
+              </mat-list-option>
+            </mat-selection-list>
+          </mat-expansion-panel>
+          <!-- Cena -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h4>Cena</h4>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-slider
+              [min]="minPrice"
+              [max]="maxPrice"
+              [discrete]="true"
+              [displayWith]="formatLabel"
+            >
+              <input matSliderStartThumb [(ngModel)]="startValue" />
+              <input matSliderEndThumb [(ngModel)]="endValue" />
+            </mat-slider>
+          </mat-expansion-panel>
+        </mat-accordion>
+        <div class="filter-buttons" fxLayout="column" fxLayoutGap="10px">
+          <button mat-raised-button color="primary" (click)="applyFilters()">
+            Primeni filtere
+          </button>
+          <button mat-stroked-button color="primary" (click)="resetFilters()">
+            Resetuj filtere
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="row">
+        <div fxLayoutAlign="space-between">
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              placeholder="Pretrazi knjigu"
+              [(ngModel)]="searchWords"
+              (keyup.enter)="searchBooks()"
+            />
+            <button mat-icon-button matSuffix (click)="searchBooks()">
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="!(filteredBooks.length === 0)">
+            <mat-label>Sortiraj</mat-label>
+            <mat-select (selectionChange)="onSortChange($event)">
+              <mat-option value="naziv">Po nazivu</mat-option>
+              <mat-option value="datum">Najnovije</mat-option>
+              <mat-option value="cenaNiza">Ceni - niža ka višoj</mat-option>
+              <mat-option value="cenaVisa">Ceni - viša ka nizoj</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <h1>
+          <mat-error
+            *ngIf="filteredBooks.length === 0"
+            fxLayoutAlign="center center"
+          >
+            0 Rezultata
+          </mat-error>
+        </h1>
+        <div
+          class="col-xxl-3 col-lg-4 col-md-5"
+          fxLayout="row"
+          fxLayoutAlign="space-evenly"
+          *ngFor="let book of paginatorBooks"
+        >
+          <mat-card
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            class="book-holder"
+          >
+            <mat-card-content
+              fxLayout="column"
+              fxLayoutAlign="center"
+              fxLayoutGap="10px"
+            >
+              <div class="image-container">
+                <img [src]="book.image" alt="Loading..." />
+                <button
+                  mat-flat-button
+                  color="primary"
+                  class="hover-button"
+                  (click)="openBookDetails(book.id)"
+                >
+                  Detaljnije
+                </button>
+              </div>
+              <mat-card-title>
+                {{ book.title }}
+              </mat-card-title>
+
+              <mat-card-subtitle fxLayout="column" fxLayoutGap="5px">
+                <span><b>Autor:</b> {{ book.author }} </span>
+                <span><b>Godina izdanja:</b> {{ book.releaseDate }} </span>
+              </mat-card-subtitle>
+            </mat-card-content>
+            <div fxLayout="column" fxLayoutGap="5px">
+              <button mat-button color="primary" class="price">
+                {{ book.price }} din
+              </button>
+              <button mat-raised-button [ngClass]="getButtonColorClass(book)">
+                <b> {{ book.inventoryStatus }} </b>
+              </button>
+
+              <mat-card-actions fxLayoutAlign="space-evenly">
+                <button
+                  [disabled]="
+                    book.inventoryStatus == 'Nije na stanju' ||
+                    this._userService.getLogedUser() == undefined
+                  "
+                  mat-icon-button
+                  matTooltip="Dodaj u korpu"
+                  fxLayoutAlign="center center"
+                  (click)="addBookToCart(book)"
+                >
+                  <!-- Dugme disabled if book out of stock -->
+                  <mat-icon>add_shopping_cart</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  matTooltip="Dodaj u listu želja"
+                  fxLayoutAlign="center center"
+                >
+                  <!-- TODO: promena ikonice kada se klikne na dodaj u listu zelja -->
+                  <mat-icon>favorite_border</mat-icon>
+                </button>
+              </mat-card-actions>
+            </div>
+          </mat-card>
+        </div>
+        <hr />
+      </div>
+      <mat-paginator
+        [length]="filteredBooks.length"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[16, 24, 32, 64]"
+        [showFirstLastButtons]="true"
+        (page)="OnPageChange($event)"
+        *ngIf="!(filteredBooks.length === 0)"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+</div>

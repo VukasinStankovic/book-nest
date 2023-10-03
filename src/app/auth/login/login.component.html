@@ -1,0 +1,68 @@
+<div class="container" fxLayout="column" fxLayoutAlign="center center">
+  <mat-card fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <mat-card-title>
+      <h1>Uloguj se</h1>
+    </mat-card-title>
+    <!-- Forma za login -->
+    <form
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayoutGap="10px"
+      #form="ngForm"
+      (ngSubmit)="onSubmit(form)"
+    >
+      <!-- Email -->
+      <mat-form-field>
+        <input
+          matInput
+          type="email"
+          placeholder="Email adresa"
+          ngModel
+          required
+          #emailInput="ngModel"
+          name="email"
+        />
+        <mat-error *ngIf="emailInput.hasError('required')"
+          >Polje je obavezno</mat-error
+        >
+        <mat-error *ngIf="!emailInput.hasError('required')"
+          >Unesite ispravan format e-mail adrese</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field>
+        <input
+          matInput
+          type="password"
+          placeholder="Šifra"
+          ngModel
+          required
+          minlength="8"
+          #passInput="ngModel"
+          name="password"
+        />
+        <mat-hint align="end"
+          >Dužina šifre: {{ passInput.value?.length }} / 8</mat-hint
+        >
+        <mat-error *ngIf="passInput.hasError('required')"
+          >Polje je obavezno</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="form.invalid"
+      >
+        Uloguj se
+      </button>
+      <mat-error *ngIf="errorExists">{{ errorText }}</mat-error>
+      <a mat-button routerLink="/sign-up" color="primay"
+        >Registruj novi nalog</a
+      >
+    </form>
+  </mat-card>
+</div>

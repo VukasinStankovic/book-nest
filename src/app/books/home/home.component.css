@@ -1,0 +1,71 @@
+mat-card {
+    transition: none;
+    box-shadow: none;
+    background-color: #FAFAFA;
+    height: 100%;
+}
+
+.price {
+    font-weight: bold;
+    font-size: large;
+}
+
+img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.hover-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.image-container:hover img {
+    filter: blur(2px);
+}
+
+.image-container:hover .hover-button {
+    opacity: 1;
+}
+
+/* Carousel */
+slide {
+    .item {
+        height: 100%;
+    }
+
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+    width: 30px;
+    filter: invert(100%);
+}
+
+.carousel-control.left {
+    margin-left: -2%;
+}
+
+.carousel-control.right {
+    margin-right: -2%;
+}
+
+
+.carousel-indicators {
+    display: none !important;
+}
+
+.container {
+    padding-top: 75px;
+}

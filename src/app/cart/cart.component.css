@@ -1,0 +1,66 @@
+img {
+    margin: 5px;
+    width: 100%;
+    max-width: 100px;
+    object-fit: contain;
+}
+
+h2 {
+    margin: 0px;
+}
+
+.price {
+    font-weight: 700;
+}
+
+.dialog-header {
+    width: 100%;
+}
+
+mat-header-row {
+    background-color: #0A6F62;
+    color: white;
+    font-weight: bold;
+    font-size: medium;
+}
+
+mat-form-field {
+    width: 95%;
+}
+
+::ng-deep .white-arrow .mat-sort-header-arrow {
+    color: #fff;
+}
+
+
+.search {
+    margin-top: 10px;
+    width: 30%;
+}
+
+.form-container {
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.col-8 {
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.comment {
+    width: 100% !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.title-holder {
+    word-wrap: break-word;
+}
+
+.book-quantity {
+    width: 50px;
+}

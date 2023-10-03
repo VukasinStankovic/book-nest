@@ -1,0 +1,172 @@
+<mat-dialog-content>
+  <div class="container" fxLayout="column" fxLayoutGap="20px">
+    <div class="row">
+      <div class="col-5">
+        <img [src]="book.image" alt="Loading" />
+      </div>
+      <div class="col-7">
+        <div fxFlex="100%" fxLayout="column">
+          <h3 class="naslov">{{ book.title }}</h3>
+          <hr />
+          <div fxLayout="row" fxLayoutGap="20px">
+            <div class="book-details" fxFlex="50%">
+              <p><b>Autor: </b> {{ book.author }}</p>
+              <p>
+                <b>Zanr: </b>
+                {{ book.genre }}
+              </p>
+              <p><b>Jezik: </b> {{ book.language }}</p>
+
+              <p><b>Izdavač: </b> {{ book.publisher }}</p>
+            </div>
+            <div fxFlex="50%">
+              <p><b>Raspoloživost: </b> {{ book.inventoryStatus }}</p>
+              <p><b>Datum izdanja: </b> {{ book.releaseDate }}.</p>
+              <p><b>Br. strana: </b> {{ book.numberOfPages }}</p>
+              <p><b>Povez: </b> {{ book.binding }}</p>
+            </div>
+          </div>
+          <hr />
+
+          <div fxFlex="100%" fxLayout="row" fxLayoutGap="20px">
+            <div
+              class="book-details"
+              fxFlex="50%"
+              fxLayout="column"
+              fxLayoutAlign=" start"
+              fxLayoutGap="10px"
+            >
+              <h3>
+                <b>{{ book.price }} din</b>
+              </h3>
+
+              <div
+                fxLayout="column"
+                fxLayoutGap="10px"
+                fxLayoutAlign="center start"
+              >
+                <p class="p-margin-0"><b>Prosečna ocena:</b></p>
+                <div fxLayoutAlign="center center" fxLayoutGap="5px">
+                  <rating
+                    [(ngModel)]="rate"
+                    [max]="max"
+                    [readonly]="true"
+                  ></rating>
+                  <span class="rating">({{ book.overallRating }})</span>
+                </div>
+              </div>
+
+              <button mat-raised-button color="accent">
+                Ostavi komentar
+                <mat-icon>rate_review</mat-icon>
+              </button>
+            </div>
+            <div
+              class="book-details2"
+              fxFlex="50%"
+              fxLayout="column"
+              fxLayoutAlign=" start"
+              fxLayoutGap="10px"
+            >
+              <div fxLayout="row">
+                <p class="quantity"><b>Količina: </b></p>
+                <mat-form-field appearance="outline">
+                  <button
+                    mat-icon-button
+                    (click)="decreaseQuantity()"
+                    [disabled]="book.inventoryStatus == 'Nije na stanju'"
+                    matPrefix
+                  >
+                    <mat-icon>remove</mat-icon>
+                  </button>
+
+                  <input
+                    matInput
+                    type="number"
+                    min="1"
+                    [max]="book.quantity"
+                    [(ngModel)]="quantity"
+                    [disabled]="book.inventoryStatus == 'Nije na stanju'"
+                  />
+
+                  <button
+                    mat-icon-button
+                    (click)="increaseQuantity()"
+                    matSuffix
+                    [disabled]="book.inventoryStatus == 'Nije na stanju'"
+                  >
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              <!-- TODO: promenljiva za kolicinu knjiga i logika dodavanja knjige -->
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="book.inventoryStatus == 'Nije na stanju'"
+              >
+                Dodaj u korpu
+                <mat-icon>add_shopping_cart</mat-icon>
+              </button>
+
+              <button mat-raised-button color="warn">
+                Dodaj u listu želja
+                <mat-icon>favorite_border</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <mat-accordion [multi]="true">
+      <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h5>Kratak opis knjige</h5>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>{{ book.description }}</p>
+      </mat-expansion-panel>
+      <hr />
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h5>Komentari</h5>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row">
+          <div
+            class="col-3 comment-holder"
+            *ngFor="let _comment of paginatorBooks"
+          >
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>{{
+                  _comment.customer.name + " " + _comment.customer.surename
+                }}</mat-card-title>
+              </mat-card-header>
+              <hr />
+              <mat-card-content>
+                <p class="p-margin-0">
+                  <b>Komentar: </b>{{ _comment.comment }}
+                </p>
+                <p class="p-margin-0">
+                  <b>Ocena: </b>{{ _comment.customerRating }}
+                </p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <mat-paginator
+          [length]="bookComments.length"
+          [pageSize]="pageSize"
+          [showFirstLastButtons]="true"
+          (page)="OnPageChange($event)"
+          *ngIf="!(bookComments.length === 0)"
+        ></mat-paginator>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</mat-dialog-content>

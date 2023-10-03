@@ -1,0 +1,509 @@
+<div class="container">
+  <div fxLayout="row">
+    <div class="dialog-header" fxLayout="row">
+      <h2 fxFlex="grow" fxLayoutAlign="center center" fxFlexOffset="5%">
+        Korpa
+      </h2>
+      <button
+        fxLayoutAlign="center center"
+        mat-icon-button
+        [mat-dialog-close]="true"
+        matTooltip="Izađi"
+      >
+        <mat-icon color="primary">close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="stepper-wrapper">
+    <mat-stepper #stepper [linear]="true">
+      <mat-step [completed]="orderedBooks.data.length !== 0 && isValid" #step1>
+        <ng-template matStepLabel>Sadržaj korpe</ng-template>
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <mat-error *ngIf="orderedBooks.data.length == 0"
+            >Korpa je prazna, dodajte bar jedan artikal</mat-error
+          >
+          <mat-form-field class="search">
+            <input
+              type="text"
+              matInput
+              (keyup)="doFilter($any($event.target).value)"
+              placeholder="Pretraži knjige"
+            />
+          </mat-form-field>
+        </div>
+        <!-- TODO: dodaj edit i delete polja sa desne strane -->
+        <!-- TODO: dodaj input polje za kolicinu -->
+        <mat-table [dataSource]="orderedBooks" matSort>
+          <!-- Slika -->
+          <ng-container matColumnDef="image">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <img src="{{ element.image }}" alt="" />
+            </mat-cell>
+          </ng-container>
+          <!-- Proizvod -->
+          <ng-container matColumnDef="title">
+            <mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="white-arrow"
+              >Proizvod</mat-header-cell
+            >
+            <mat-cell *matCellDef="let element">{{ element.title }}</mat-cell>
+          </ng-container>
+          <!-- Cena -->
+          <ng-container matColumnDef="price">
+            <mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="white-arrow"
+              >Cena</mat-header-cell
+            >
+            <mat-cell *matCellDef="let element">{{ element.price }}</mat-cell>
+          </ng-container>
+          <!-- Kolicina -->
+          <ng-container matColumnDef="orderedQuantity">
+            <mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="white-arrow"
+              >Količina</mat-header-cell
+            >
+            <mat-cell *matCellDef="let element">
+              <div fxLayout="column">
+                <mat-form-field appearance="outline" class="book-quantity">
+                  <input
+                    [disabled]="isBookQuantityEditable"
+                    required
+                    matInput
+                    type="number"
+                    min="1"
+                    [max]="element.quantity"
+                    [(ngModel)]="element.orderedQuantity"
+                    (ngModelChange)="isQuantityValid(element)"
+                    #bookQuantityInput="ngModel"
+                  />
+                </mat-form-field>
+
+                <mat-error *ngIf="bookQuantityInput.hasError('required')"
+                  >Kolicina ne moze biti manja od 1</mat-error
+                >
+                <mat-error *ngIf="element.orderedQuantity > element.quantity"
+                  >Maksimalan broj primeraka je
+                  {{ element.quantity }}</mat-error
+                >
+              </div>
+            </mat-cell>
+          </ng-container>
+          <!-- Međuzbir -->
+          <ng-container matColumnDef="Međuzbir">
+            <mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="white-arrow"
+              >Međuzbir</mat-header-cell
+            >
+            <mat-cell *matCellDef="let element">{{
+              element.price * element.orderedQuantity
+            }}</mat-cell>
+          </ng-container>
+          <!-- Akcije -->
+          <ng-container matColumnDef="Akcije">
+            <mat-header-cell *matHeaderCellDef>Akcije</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <button
+                mat-icon-button
+                color="warn"
+                matTooltip="Ukloni knjigu iz korpe"
+              >
+                <!-- TODO: implementiraj brisanje iz korpe -->
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                (click)="isBookQuantityEditable = !isBookQuantityEditable"
+                mat-icon-button
+                color="primary"
+                matTooltip="Izmeni količinu"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let rows; columns: displayedColumns"></mat-row>
+        </mat-table>
+
+        <hr />
+        <div fxLayout="column" fxLayoutAlign="center end" fxLayoutGap="10px">
+          <mat-paginator [pageSize]="1" [pageSizeOptions]="[1, 3]">
+          </mat-paginator>
+          <h5>
+            Ukupna cena:
+            <span class="price">{{ calculateTotalPrice() }}</span> din
+          </h5>
+          <button
+            mat-raised-button
+            color="primary"
+            matStepperNext
+            [disabled]="orderedBooks.data.length == 0 || !isValid"
+          >
+            Nastavi sa kupovinom
+            <mat-icon matSuffix>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+      <!-- Licni podaci i nacin placanja-->
+      <mat-step
+        [stepControl]="form.control"
+        errorMessage="Svi podaci moraju biti popunjeni"
+      >
+        <form #form="ngForm">
+          <ng-template matStepLabel>Lični podaci & Način plaćanja</ng-template>
+
+          <div class="row">
+            <!-- Licni podaci -->
+            <div class="col-8">
+              <h3>Licni podaci</h3>
+              <div fxLayout="row" class="form-container">
+                <div fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
+                  <mat-form-field appearance="outline" color="primary">
+                    <mat-label>Ime</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Unesite vase ime"
+                      ngModel
+                      name="name"
+                      [(ngModel)]="this.userInputData.name"
+                      required
+                      #nameInput="ngModel"
+                    />
+                    <mat-icon color="primary" matSuffix>badge</mat-icon>
+                    <mat-error *ngIf="nameInput.hasError('required')"
+                      >Polje je obavezno</mat-error
+                    >
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" color="primary">
+                    <mat-label>Prezime</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Unesite vase prezime"
+                      ngModel
+                      name="surename"
+                      [(ngModel)]="this.userInputData.surename"
+                      required
+                      #surenameInput="ngModel"
+                    />
+                    <mat-icon color="primary" matSuffix>badge</mat-icon>
+                    <mat-error *ngIf="surenameInput.hasError('required')"
+                      >Polje je obavezno</mat-error
+                    >
+                  </mat-form-field>
+
+                  <!-- TODO pokupiti street i streetNumber iz forme umesto iz user.model -->
+                  <mat-form-field appearance="outline">
+                    <mat-label>Ulica</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Unesite naziv ulice"
+                      ngModel
+                      name="street"
+                      [(ngModel)]="this.userInputData.street"
+                      required
+                      #streetInput="ngModel"
+                    />
+                    <mat-icon color="primary" matSuffix>room</mat-icon>
+                    <mat-error *ngIf="streetInput.hasError('required')"
+                      >Polje je obavezno</mat-error
+                    >
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Broj</mat-label>
+                    <input
+                      type="number"
+                      matInput
+                      placeholder="Unesite ulični broj"
+                      ngModel
+                      name="streetNumber"
+                      [(ngModel)]="this.userInputData.streetNumber"
+                      required
+                      #streetNumberInput="ngModel"
+                    />
+                    <mat-icon color="primary" matSuffix>looks_one</mat-icon>
+                    <mat-error *ngIf="streetNumberInput.hasError('required')"
+                      >Polje je obavezno</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div
+                  fxFlex="50%"
+                  fxLayout="column"
+                  fxLayoutAlign="center end"
+                  fxLayoutGap="5px"
+                >
+                  <mat-form-field appearance="outline">
+                    <mat-label>Grad</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Grad"
+                      ngModel
+                      name="city"
+                      ngModel
+                      required
+                      #cityInput="ngModel"
+                    />
+                    <mat-icon color="primary" matSuffix>location_city</mat-icon>
+                    <mat-error *ngIf="cityInput.hasError('required')"
+                      >Polje je obavezno</mat-error
+                    >
+                  </mat-form-field>
+
+                  <!-- TODO: dodaj ogranicenje na min i max 5 broja -->
+                  <mat-form-field appearance="outline">
+                    <mat-label>Postanski broj</mat-label>
+                    <input
+                      type="number"
+                      matInput
+                      placeholder="Postanski broj"
+                      ngModel
+                      name="zipcode"
+                      required
+                      pattern="\b\d{5}\b"
+                      #zipcodeInput="ngModel"
+                    />
+                    <mat-hint align="end">
+                      {{ zipcodeInput.value?.toString().length }} / 5
+                    </mat-hint>
+
+                    <mat-icon color="primary" matSuffix>person_pin</mat-icon>
+                    <mat-error *ngIf="zipcodeInput.hasError('required')"
+                      >Polje je obavezno</mat-error
+                    >
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Telefon</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Broj telefona"
+                      ngModel
+                      name="phone"
+                      [(ngModel)]="this.userInputData.phone"
+                      required
+                      #phoneInput="ngModel"
+                    />
+                    <mat-icon color="primary" matSuffix>call</mat-icon>
+                    <mat-error *ngIf="phoneInput.hasError('required')"
+                      >Polje je obavezno</mat-error
+                    >
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>E-mail</mat-label>
+                    <input
+                      type="email"
+                      matInput
+                      placeholder="Your email"
+                      ngModel
+                      name="email"
+                      [(ngModel)]="this.userInputData.email"
+                      email
+                      required
+                      #emailInput="ngModel"
+                    />
+                    <mat-icon color="primary" matSuffix>mail</mat-icon>
+                    <mat-error *ngIf="emailInput.hasError('required')"
+                      >Polje je obavezno</mat-error
+                    >
+                    <mat-error *ngIf="!emailInput.hasError('required')"
+                      >Neispravan format e-mail adrese</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+              <mat-form-field appearance="outline" class="comment">
+                <textarea
+                  type="text"
+                  matInput
+                  placeholder="Unesite komentar ukoliko imate posebnu napomenu vezano za ovu porudžbinu. (Nije obavezno)"
+                  ngModel
+                  name="comment"
+                  #commentInput="ngModel"
+                ></textarea>
+                <mat-icon color="primary" matPrefix>comment</mat-icon>
+              </mat-form-field>
+            </div>
+            <!-- Nacin placanja -->
+            <div class="col-4">
+              <h3>Nacin placanja</h3>
+              <div class="form-container">
+                <mat-radio-group
+                  fxLayout="column"
+                  #paymentMethodInput
+                  color="primary"
+                  required
+                  ngModel
+                  name="paymentMethod"
+                  [(ngModel)]="selectedPaymentMethod"
+                >
+                  <mat-radio-button
+                    *ngFor="let pMethod of paymentMethods"
+                    [value]="pMethod"
+                  >
+                    <div
+                      fxLayout="row"
+                      fxLayoutAlign="center center"
+                      fxLayoutGap="5px"
+                    >
+                      <mat-icon
+                        matListItemIcon
+                        *ngIf="pMethod == 'Platnom karticom'"
+                        >credit_card</mat-icon
+                      >
+                      <mat-icon matListItemIcon *ngIf="pMethod == 'Pouzećem'"
+                        >local_shipping</mat-icon
+                      >
+                      <mat-icon
+                        matListItemIcon
+                        *ngIf="pMethod == 'Preko racuna'"
+                        >account_balance</mat-icon
+                      >
+                      <span>
+                        {{ pMethod }}
+                      </span>
+                    </div>
+                  </mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="!selectedPaymentMethod"
+                  >Polje je obavezno</mat-error
+                >
+              </div>
+            </div>
+          </div>
+
+          <div fxLayoutAlign="space-between center" class="navigation-buttons">
+            <button mat-raised-button color="primary" matStepperPrevious>
+              Prethodni korak
+              <mat-icon matSuffix>arrow_back</mat-icon>
+            </button>
+
+            <button
+              [disabled]="form.invalid"
+              mat-raised-button
+              color="primary"
+              matStepperNext
+              type="button"
+            >
+              Nastavi sa kupovinom
+              <mat-icon matSuffix>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <!-- POTVRDA KUPOVINE -->
+      <!-- TODO: prikazu sadrzaj korpe i unete podatke -->
+      <mat-step>
+        <ng-template matStepLabel>Potvrda kupovine</ng-template>
+
+        <div class="row">
+          <!-- Tabela -->
+          <div class="col-8">
+            <h4>Sadrzaj korpe:</h4>
+            <hr />
+            <!-- book holder -->
+            <div fxLayout="column">
+              <table>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Naslov</th>
+                    <th>Količina</th>
+                    <th>Cena</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let book of paginatorBooks">
+                    <td><img src="{{ book.image }}" alt="Loading..." /></td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.orderedQuantity }}</td>
+                    <td>{{ book.price }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr />
+
+              <div fxLayoutAlign="end center">
+                <h5>
+                  Ukupna cena:
+                  <span class="price">{{ calculateTotalPrice() }}</span> din
+                </h5>
+              </div>
+            </div>
+          </div>
+          <!-- Podaci -->
+          <div class="col-4">
+            <h4>Podaci o kupcu:</h4>
+            <hr />
+            <p>
+              <b>Ime i prezime: </b>
+              {{ form.value.name + " " + form.value.surename }}
+            </p>
+            <p>
+              <b>Ulica i broj: </b>
+              {{ form.value.street + " " + form.value.streetNumber }}
+            </p>
+            <p>
+              <b>Mesto i poštanski broj: </b>
+              {{ form.value.city + " " + form.value.zipcode }}
+            </p>
+            <p><b>Telefon: </b> {{ form.value.phone }}</p>
+            <p><b>E-mail: </b> {{ form.value.email }}</p>
+            <p><b>Nacin plaćanja: </b> {{ form.value.paymentMethod }}</p>
+          </div>
+
+          <mat-error
+            >Molimo Vas da pre poručivanja proverite ispravnost unetih podatka i
+            sadržaj korpe</mat-error
+          >
+        </div>
+
+        <div fxLayoutAlign="space-between center">
+          <button
+            mat-raised-button
+            color="primary"
+            matStepperPrevious
+            type="submit"
+          >
+            Prethodni korak
+            <mat-icon matSuffix>arrow_back</mat-icon>
+          </button>
+
+          <mat-paginator
+            [length]="orderedBooks.data.length"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[1, 2, 3]"
+            (page)="OnPageChange($event)"
+          >
+          </mat-paginator>
+
+          <button
+            mat-raised-button
+            color="warn"
+            matStepperNext
+            (click)="onSubmitCustomerData(form)"
+            [mat-dialog-close]="true"
+          >
+            Potvrda kupovine
+            <mat-icon matSuffix>shopping_bag</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </div>
+</div>

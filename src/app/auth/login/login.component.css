@@ -1,0 +1,12 @@
+mat-card {
+    width: 500px;
+    padding: 5%;
+}
+
+mat-form-field {
+    width: 400px;
+}
+
+.container {
+    padding-top: 75px;
+}

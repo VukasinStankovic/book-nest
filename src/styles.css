@@ -1,1 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Global import */
+/* Setovanje predefinisane teme globalno */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+    width: 30px;
+    filter: invert(100%);
+}
+
+.carousel-control.left {
+    margin-left: -2%;
+}
+
+.carousel-control.right {
+    margin-right: -2%;
+}
+
+
+.carousel-indicators {
+    display: none;
+}
+
+.carousel {
+    border-top: 2px solid black;
+}
+
+
+.container {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* SNACKBAR */
