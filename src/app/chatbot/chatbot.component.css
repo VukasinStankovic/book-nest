@@ -32,12 +32,13 @@ h3 {
 
 .chatbot-content {
   flex: 1;
-  overflow-y: auto;
+  overflow: auto;
+  max-height: 100%;
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 
 .bot-message {

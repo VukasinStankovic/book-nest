@@ -1,12 +1,8 @@
 import {
-  AfterViewChecked,
-  ChangeDetectorRef,
   Component,
   DoCheck,
   ElementRef,
   Inject,
-  OnChanges,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -22,8 +18,7 @@ enum MessageSender {
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.css'],
 })
-export class ChatbotComponent implements DoCheck {
-  @ViewChild('chatContainer') private chatContainer!: ElementRef;
+export class ChatbotComponent {
   chatbotOpened: boolean;
   currentTime!: string;
   userMessage: string = '';
@@ -48,19 +43,6 @@ export class ChatbotComponent implements DoCheck {
       hour: '2-digit',
       minute: '2-digit',
     });
-  }
-
-  private previousLength = 0;
-  ngDoCheck(): void {
-    if (this.conversation.length !== this.previousLength) {
-      this.previousLength = this.conversation.length;
-      this.scrollToBottom();
-    }
-  }
-
-  private scrollToBottom(): void {
-    const container = this.chatContainer.nativeElement;
-    container.scrollTop = container.scrollHeight;
   }
 
   readUserMessage(): void {

@@ -1,11 +1,11 @@
 <div class="container">
   <div class="chatbot-header">
-    <h3>JokicaGPT</h3>
+    <h3>ReadMate</h3>
     <button mat-icon-button (click)="closeChatbot()">
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  <div class="chatbot-content" #chatContainer>
+  <div class="chatbot-content">
     <div class="chat-messages">
       <ng-container *ngFor="let m of conversation">
         <div
@@ -25,7 +25,7 @@
     <mat-form-field class="message" subscriptSizing="dynamic">
       <input
         matInput
-        placeholder="Unesite poruku..."
+        placeholder="Enter a message..."
         [(ngModel)]="userMessage"
         name="message"
       />
