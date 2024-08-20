@@ -5,25 +5,22 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  <div class="chatbot-content">
+  <div class="chatbot-content" #chatContainer>
     <div class="chat-messages">
-      <div id="bot-message" class="bot-message">
-        <strong
-          >asdasdsadasdasdasdasd asdasdasda asdasdasd asdasdasdas dasdsa
-        </strong>
-        <p class="message-timestamp">{{ currentTime }}</p>
-      </div>
-
-      <div
-        id="user-message"
-        class="user-message"
-        *ngFor="let m of userMessages"
-      >
-        <strong>{{ m.message }} </strong>
-        <p class="message-timestamp">{{ m.timestamp }}</p>
-      </div>
+      <ng-container *ngFor="let m of conversation">
+        <div
+          [ngClass]="{
+            'user-message': m.sender === 'User',
+            'bot-message': m.sender === 'Chatbot'
+          }"
+        >
+          <strong>{{ m.message }}</strong>
+          <p class="message-timestamp">{{ m.timestamp }}</p>
+        </div>
+      </ng-container>
     </div>
   </div>
+
   <form class="example-form" (ngSubmit)="readUserMessage()">
     <mat-form-field class="message" subscriptSizing="dynamic">
       <input
@@ -38,52 +35,3 @@
     </mat-form-field>
   </form>
 </div>
-
-<!-- <script>
-      $(document).ready(function () {
-        $("#chat-widget-button").on("click", function () {
-          $("#chat-widget")   .toggleClass("d-none");
-        });
-
-        $("#chat-widget-close-button").on("click", function () {
-          $("#chat-widget").addClass("d-none");
-        });
-
-        // Korisnicki unosi u input polje chatbota
-        $("#chat-widget-input").keypress(function (event) {
-          if (event.which === 13) {
-            // 13 predstavlja unicode vrednost tastera Enter (Return)
-            let userMessage = $("#chat-widget-input").val(); // val() uzima vrednost iz input polja
-            $("#chat-widget-input").val("");
-
-            // prikazujemo poruku u chat
-            $("#chat-widget-messages").append(
-              "<div> <div>You:</div>" + userMessage + "<hr> </div>"
-            );
-
-            // Upucivanje koriscnicke poruke prema serveru i GET odgovora chatbota
-            $.ajax({
-              type: "POST",
-              url: "http://localhost:5005/webhooks/rest/webhook",
-              contentType: "application/json",
-              data: JSON.stringify({ message: userMessage }),
-              success: function (data) {
-                let botResponse = data[0].text;
-                console.log(botResponse);
-
-                //Apendovanje odgovora chatbota u chat
-                $("#chat-widget-messages").append(
-                  "<div> <div>Chatbot:</div>" +
-                    botResponse +
-
-                    "<hr> </div>"
-                );
-              },
-              error: function () {
-                // ... Ukoliko ima potrebe, generisati greske
-              },
-            });
-          }
-        });
-      });
-    </script> -->
