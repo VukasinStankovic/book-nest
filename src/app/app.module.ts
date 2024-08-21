@@ -17,6 +17,8 @@ import { ProfileComponent } from './auth/profile/profile.component';
 import { CartComponent } from './cart/cart.component';
 import { BookDetailsComponent } from './books/book-details/book-details.component';
 import { CartOrderService } from './cart/cart-order.service';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { CartOrderService } from './cart/cart-order.service';
     ProfileComponent,
     CartComponent,
     BookDetailsComponent,
+    ChatbotComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +39,7 @@ import { CartOrderService } from './cart/cart-order.service';
     BrowserAnimationsModule,
     FlexLayoutModule,
     FormsModule,
+    HttpClientModule,
   ],
   providers: [BookService, UserService, CartOrderService],
   bootstrap: [AppComponent],

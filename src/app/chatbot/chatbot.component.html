@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="chatbot-header">
+    <h3>ReadMate</h3>
+    <button mat-icon-button (click)="closeChatbot()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="chatbot-content">
+    <div class="chat-messages">
+      <ng-container *ngFor="let m of conversation">
+        <div
+          [ngClass]="{
+            'user-message': m.sender === 'User',
+            'bot-message': m.sender === 'Chatbot'
+          }"
+        >
+          <strong>{{ m.message }}</strong>
+          <p class="message-timestamp">{{ m.timestamp }}</p>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <form class="example-form" (ngSubmit)="readUserMessage()">
+    <mat-form-field class="message" subscriptSizing="dynamic">
+      <input
+        matInput
+        placeholder="Enter a message..."
+        [(ngModel)]="userMessage"
+        name="message"
+      />
+      <button matSuffix mat-icon-button type="submit">
+        <mat-icon class="icon-send">send</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+</div>

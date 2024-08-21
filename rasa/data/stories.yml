@@ -1,0 +1,15 @@
+version: "3.1"
+
+stories:
+  - story: how to order book
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: book_recommendation
+      - action: utter_choose_genre
+      - intent: genre
+      - action: utter_computer_science_books
+      - intent: thanks
+      - action: utter_did_that_help
+      - intent: affirm
+      - action: utter_goodbye

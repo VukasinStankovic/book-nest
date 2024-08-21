@@ -139,3 +139,12 @@ Vise o rutama: https://angular.io/guide/router#defining-routes
     <router-outlet></router-outlet>
   </div>
 </mat-sidenav-container>
+
+<button
+  mat-icon-button
+  class="chatbot"
+  (click)="openChatbot()"
+  *ngIf="this.chatbotOpened"
+>
+  <mat-icon>forum</mat-icon>
+</button>

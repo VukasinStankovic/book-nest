@@ -1,0 +1,99 @@
+version: "3.1"
+
+nlu:
+  - intent: greet
+    examples: |
+      - hey
+      - hello
+      - hi
+      - hello there
+      - good morning
+      - good evening
+      - moin
+      - hey there
+      - let's go
+      - hey dude
+      - goodmorning
+      - goodevening
+      - good afternoon
+
+  - intent: goodbye
+    examples: |
+      - cu
+      - good by
+      - cee you later
+      - good night
+      - bye
+      - goodbye
+      - have a nice day
+      - see you around
+      - bye bye
+      - see you later
+
+  - intent: affirm
+    examples: |
+      - yes
+      - y
+      - indeed
+      - of course
+      - that sounds good
+      - correct
+
+  - intent: deny
+    examples: |
+      - no
+      - n
+      - never
+      - I don't think so
+      - don't like that
+      - no way
+      - not really
+
+  - intent: thanks
+    examples: |
+      - Thank you
+      - Thanks a lot
+      - I appreciate it
+      - Thanks for your help
+      - Thank you so much
+      - Many thanks
+      - Thanks for the assistance
+
+  - intent: book_recommendation
+    examples: |
+      - Suggest some good books 
+      - What books do you recommend?
+      - Recommend me a good book
+      - Can you suggest a book to read?
+      - Help me find a book to read
+      - What book should I read next?
+
+  - intent: genre
+    examples: |
+      - Mystery
+      - Romance
+      - Science Fiction
+      - Fantasy
+      - Thriller
+      - Non-fiction
+      - Biography
+      - Historical fiction
+      - Computer science
+
+  - intent: author
+    examples: |
+      - Lezlija Njuman
+      - Dejan Tijago Stankovic
+      - Muhammad Ahsan Ayaz
+      - Laura Lemay
+      - Laurence Lars Svekis
+      - Juval Noa Harari
+
+  - intent: book
+    examples: |
+      - Angular kuvar
+      - Estoril
+      - HTML5, CSS3 i JavaScript za razvoj veb strana
+      - Madam Pompadur
+      - Node.js veb razvoj - prevod 5. izdanja
+      - Sapijens

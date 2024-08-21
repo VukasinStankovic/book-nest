@@ -1,0 +1,38 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - thanks
+  - book_recommendation
+  - genre
+  - author
+  - book
+
+responses:
+  utter_greet:
+    - text: "Hey! How I can help you?"
+
+  utter_did_that_help:
+    - text: "Did that help you?"
+
+  utter_happy:
+    - text: "Great, carry on!"
+
+  utter_goodbye:
+    - text: "Bye"
+
+  utter_choose_genre:
+    - text: "Which genre are you intrested in?"
+
+  utter_computer_science_books:
+    - text: "I can recommend these three books to you:\n 
+    1. Node.js veb razvoj - prevod 5. izdanja\n
+    2. HTML5, CSS3 i JavaScript za razvoj veb strana\n
+    3. Angular kuvar"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
