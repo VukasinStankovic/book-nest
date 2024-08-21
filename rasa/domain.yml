@@ -5,29 +5,33 @@ intents:
   - goodbye
   - affirm
   - deny
-  - mood_great
-  - mood_unhappy
-  - bot_challenge
+  - thanks
+  - book_recommendation
+  - genre
+  - author
+  - book
 
 responses:
   utter_greet:
-  - text: "Hey! How are you?"
-
-  utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
+    - text: "Hey! How I can help you?"
 
   utter_did_that_help:
-  - text: "Did that help you?"
+    - text: "Did that help you?"
 
   utter_happy:
-  - text: "Great, carry on!"
+    - text: "Great, carry on!"
 
   utter_goodbye:
-  - text: "Bye"
+    - text: "Bye"
 
-  utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+  utter_choose_genre:
+    - text: "Which genre are you intrested in?"
+
+  utter_computer_science_books:
+    - text: "I can recommend these three books to you:\n 
+    1. Node.js veb razvoj - prevod 5. izdanja\n
+    2. HTML5, CSS3 i JavaScript za razvoj veb strana\n
+    3. Angular kuvar"
 
 session_config:
   session_expiration_time: 60
